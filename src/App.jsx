@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, KeyboardControls } from "@react-three/drei";
 import Experience from "@/components/Experience";
-import Keyboard from "@/components/keyboard";
+import Keyboard from "@/components/Keyboard";
 import MobileControls from "@/components/controls/MobileControls";
 
 // 간단한 모바일 판별 (SSR 안전)

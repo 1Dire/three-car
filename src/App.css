@@ -1,0 +1,23 @@
+/* 전역: 선택/콜아웃/하이라이트 제거 */
+html, body, #root, canvas {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -ms-touch-action: none;      /* 오래된 Edge */
+  touch-action: none;          /* 기본 제스처 비활성 (iOS는 대상 요소에 필요) */
+}
+
+/* 텍스트/링크/이미지도 강하게 차단 */
+*, a, img, button, input, textarea {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* 필요 시, 컨트롤 영역은 포인터 받도록 */
+.mobile-ui,
+.mobile-ui * {
+  touch-action: none;
+  -webkit-touch-callout: none;
+}

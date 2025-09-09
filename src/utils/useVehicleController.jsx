@@ -29,7 +29,7 @@ export const useVehicleController = (chassisRef, wheelsRef, wheelsInfo) => {
       );
     });
 
-    // 서스펜션 파라미터 적용
+    // 서스펜션 파라미터
     wheelsInfo.forEach((wheel, index) => {
       vehicle.setWheelSuspensionStiffness(index, wheel.suspensionStiffness);
       vehicle.setWheelMaxSuspensionTravel(index, wheel.maxSuspensionTravel);
@@ -44,7 +44,7 @@ export const useVehicleController = (chassisRef, wheelsRef, wheelsInfo) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 물리 스텝 이후 휠 시각 동기화
+  // 물리 스텝 이후 바퀴 시각 상태 동기화
   useAfterPhysicsStep((rapierWorld) => {
     const controller = vehicleController.current;
     if (!controller) return;
@@ -57,16 +57,16 @@ export const useVehicleController = (chassisRef, wheelsRef, wheelsInfo) => {
     wheels.forEach((wheel, index) => {
       if (!wheel) return;
 
-      const axle = controller.wheelAxleCs(index); // null/undefined 가능
+      const axle = controller.wheelAxleCs(index);
       const connection = controller.wheelChassisConnectionPointCs(index)?.y ?? 0;
       const suspension = controller.wheelSuspensionLength(index) ?? 0;
       const steering = controller.wheelSteering(index) ?? 0;
       const rotationRad = controller.wheelRotation(index) ?? 0;
 
-      // 서스펜션 압축량 반영 (y 위치)
+      // 서스펜션 압축량 → y 위치
       wheel.position.y = connection - suspension;
 
-      // 조향(Y축) + 바퀴 회전(축 기준) 적용
+      // 조향(Y축) + 회전(바퀴축) 적용
       _wheelSteeringQuat.setFromAxisAngle(up, steering);
       if (axle) {
         _wheelRotationQuat.setFromAxisAngle(axle, rotationRad);

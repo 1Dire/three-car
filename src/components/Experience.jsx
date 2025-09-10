@@ -3,10 +3,14 @@ import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
 import { Pane } from "tweakpane";
 import { useState, useEffect, useRef } from "react";
 import Vehicle from "./Vehicle";
+import { Environment, useGLTF } from "@react-three/drei";
 
 export default function Experience() {
-  const [debugPane, setDebugPane] = useState(null);
+  // GLTF 미리 로드 (팝인 방지) — 실제 경로 확인
+  useGLTF.preload("/models/car-body.glb");
+  useGLTF.preload("/models/car-wheel.glb");
 
+  const [debugPane, setDebugPane] = useState(null);
   const [floorParams, setFloorParams] = useState({
     floorSize: 20,
     display: true,
@@ -37,7 +41,9 @@ export default function Experience() {
 
     const bind = (folder, key, opt = {}) => {
       const ctrl = folder.addBinding(floorParams, key, opt);
-      ctrl.on("change", (ev) => setFloorParams((p) => ({ ...p, [key]: ev.value })));
+      ctrl.on("change", (ev) =>
+        setFloorParams((p) => ({ ...p, [key]: ev.value }))
+      );
     };
 
     bind(fFloor, "display");
@@ -69,6 +75,7 @@ export default function Experience() {
     <>
       <ambientLight intensity={0.25} />
       <directionalLight position={[3, 5, 2]} intensity={1.2} />
+      <Environment files="/textures/envmap.hdr" background={false} />
 
       <Physics debug={location.hash.includes("debug")} gravity={[0, -9.81, 0]}>
         {/* 바닥 충돌체 (half-extents) */}
@@ -79,7 +86,13 @@ export default function Experience() {
           />
         </RigidBody>
 
-        <Vehicle debugPane={debugPane} position={[0, 1, 0]} rotation={[0, 0, 0]} />
+        <Vehicle
+          debugPane={debugPane}
+          position={[0, 1, 0]}
+          rotation={[0, 0, 0]}
+          bodyModelUrl="/models/car-body.glb"   // 실제 위치에 맞게 수정 가능
+          wheelModelUrl="/models/car-wheel.glb" // 실제 위치에 맞게 수정 가능
+        />
       </Physics>
 
       {floorParams.display && (
